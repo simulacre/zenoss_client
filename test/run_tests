@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ruby -wW2 -I ../lib -I .. run_tests.rb $@

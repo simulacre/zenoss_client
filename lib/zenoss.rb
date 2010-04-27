@@ -30,10 +30,10 @@ module Zenoss
   # @return [URI] the URI that was parsed and used as our base connection
   def Zenoss.uri(uri)
     if(uri.kind_of?(URI))
-      uri.path << '/' unless(uri.path.index /\/$/)
+      uri.path << '/' unless(uri.path.index(/\/$/))
       const_set(:BASE_URI, uri)
     else
-      uri << '/' unless(uri.index /\/$/)
+      uri << '/' unless(uri.index(/\/$/))
       const_set(:BASE_URI, URI.parse(uri))
     end
   end
@@ -112,7 +112,7 @@ module Zenoss
   # @return [Array] a bonafide Ruby Array
   def plist_to_array(list)
     return nil if list.nil?
-    (list.gsub /[\[\]]/,'').split /,\s+/
+    (list.gsub(/[\[\]]/,'')).split(/,\s+/)
   end
 
   # Converts a String in Python's DateTime format to Ruby's DateTime format

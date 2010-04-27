@@ -1,0 +1,4 @@
+:zenoss_server:
+  :base_uri: http://127.0.0.1:8080/zport/dmd/
+  :user: auser
+  :password: apass
