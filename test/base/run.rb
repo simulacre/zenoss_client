@@ -13,12 +13,12 @@ module Test
 
       
       def self.startup
-        @@params = YAML.load_file('base/params.yml')
-        @@user            = $user || @@params[:zenoss_server][:user]
-        @@password        = $password || @@params[:zenoss_server][:password]
-        @@base_uri        = $base_uri || @@params[:zenoss_server][:base_uri]
+        @@params  = YAML.load_file('base/params.yml')
+        $user     ||= @@params[:zenoss_server][:user]
+        $password ||= @@params[:zenoss_server][:password]
+        $base_uri ||= @@params[:zenoss_server][:base_uri]
         
-        puts "user: #{@@user}; password: #{@@password}; base_uri: #{@@base_uri}" if $verbose >= 1
+        puts "user: #{$user}; password: #{$password}; base_uri: #{$base_uri}" if $verbose >= 1
       end # self.startup
 
       
@@ -32,23 +32,23 @@ module Test
       #end
 
       test "user not nil" do
-        assert_not_nil(@@user)
+        assert_not_nil($user)
       end
 
       test "password not nil" do
-        assert_not_nil(@@password)
+        assert_not_nil($password)
       end
 
       test "set Zenoss auth" do
-        assert_nothing_thrown { ::Zenoss.set_auth(@@user, @@password) }
+        assert_nothing_thrown { ::Zenoss.set_auth($user, $password) }
       end
       
       test "base_uri set" do
-        assert_not_nil(@@base_uri)
+        assert_not_nil($base_uri)
       end
       
       test "set Zenoss uri" do
-        assert_nothing_thrown { ::Zenoss.uri(@@base_uri) }
+        assert_nothing_thrown { ::Zenoss.uri($base_uri) }
       end
       
     end # Run
