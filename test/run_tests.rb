@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'optparse'
-require 'highline/import'
 require 'test/unit/testsuite'
 require 'test/unit/ui/console/testrunner'
 
