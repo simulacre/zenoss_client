@@ -24,18 +24,66 @@ module Zenoss
       include Zenoss::Model
 
       @@zenoss_methods = []
+      attr_reader :interfaces
 
       def initialize(device)
         @device = device
+        @interfaces = []
+        interfaces = plist_to_array(rest("interfaces"))
+        return nil if interfaces.nil?
+        interfaces.each do |inf|
+          @interfaces << Interface.new(@device, inf) unless inf.nil? || inf.empty?
+        end # do |inf|
       end
 
+      # In order to retrieve RRD data related to interfaces we need to define an 
+      # Interface class for use by the Operating System class.
+      class Interface
+        include ::Zenoss
+        include ::Zenoss::Model
+        include ::Zenoss::Model::RRDView
+        
+        attr_reader :name
+        
+        def initialize(device, path)
+          @device   = device
+          if(m = /#{@device.path}\/#{@device.device}\/os\/interfaces\/([\w_\-\.]+)>/.match(path))
+            @name = m[1]
+          else  
+            @name = nil
+          end # if
+          
+          model_init
+        end # initialize
+        
+        #
+        # TBD
+        def ips
+          @ips ||= plist_to_array(rest("getIpAddresses")) 
+        end # ip
+        
+        #
+        # TBD
+        def mac
+          @mac ||= rest("getInterfaceMacaddress")
+        end # mac
 
+        private 
+
+        def rest(method)
+          return nil if @name.nil? || @name.empty?
+          super("#{@device.path}/#{@device.device}/os/interfaces/#{@name}/#{method}")
+        end # rest
+      end # Interface
+      
+      
+      
       private
 
       def rest(method)
         super("#{@device.path}/#{@device.device}/os/#{method}")
       end
 
-    end # Device
+    end # OperatingSystem
   end # Model
 end # Zenoss

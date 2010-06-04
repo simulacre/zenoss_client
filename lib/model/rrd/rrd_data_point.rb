@@ -22,6 +22,7 @@ module Zenoss
     class RRDDataPoint
       include Zenoss
       include Zenoss::Model
+      include Zenoss::Model::RRDView
 
       def initialize(datapoint_path)
         @path = datapoint_path

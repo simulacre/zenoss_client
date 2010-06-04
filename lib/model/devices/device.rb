@@ -158,9 +158,67 @@ module Zenoss
 
       # Update the devices hardware tag with the passed string
       def set_hw_tag(asset_tag)
-        puts "No REST implementation yet."
-        #rest("setHWTag?assettag#{asset_tag}")
+        rest("setHWTag?assettag=#{asset_tag}")
       end
+      
+      #
+      # TBD
+      def set_hw_serial_number(serial)
+        rest("setHWSerialNumber?number=#{serial}")
+      end # set_hw_serial_number(serial)
+      
+      #
+      # TBD
+      def set_manage_ip(ip = nil)
+        ip.nil? ? rest("setManageIp") : rest("setManageIp?ip=#{ip}") 
+      end # set_manage_ip(ip = nil)
+      
+      #
+      # TBD
+      def set_location(location)
+        rest("setLocation?locationPath=#{location}")
+      end # set_location(location)
+      
+      #
+      # Edit the deviec relation and attributes.
+      # **NOTE** This will reset any attributes of the device that are 
+      # set outside of the manage_edit method, so call it first. Then
+      # call the other individual methods. Future versions will work
+      # around this bug at the cost of performance.
+      #
+      # _attributes_: Hash of attributes to set on the device:
+      #               _tag_:
+      #               _serialNumber_:
+      #               _zSnmpCommunity_:
+      #               _zSnmpPort_:
+      #               _zSnmpVer_:
+      #               _rackSlot_:
+      #               _productionState_: (1000)
+      #               _comments_:
+      #               _hwManufacturer_:
+      #               _hwProductName_:
+      #               _osManufacturer_:
+      #               _osProductName_:
+      #               _locationPath_:
+      #               _groupPaths_: Array
+      #               _systemPaths_: Array
+      #               _perforamnceMonitor_: (localhost)
+      #               _priority_: (3)
+      #               _zProperties_: None
+      #               _title_: None
+      #
+      # Reference: zenoss%20api/Products.ZenModel.Device-pysrc.html
+      def manage_edit(attributes = {})
+        qs = attributes.to_a.map! { |v| v = "#{v[0]}=#{CGI::escape(v[1])}" }.join("&")
+        rest("manage_editDevice?#{qs}")
+      end # manage_edit(attributes)
+      
+      #
+      # TBD
+      def set_rack_slot(slot)
+        rest("manage_editDevice?rackSlot=#{slot}")
+      end # set_rack_slot(slot)
+
 
       # Return list of monitored DeviceComponents on this device
       def get_monitored_components(collector=nil, type=nil)

@@ -62,7 +62,15 @@ module Zenoss
     Model::System.new('/zport/dmd/Systems')
   end
 
-
+  #
+  # Allow the caller to execute REST requests that don't
+  # yet have zenoss_client wrappers
+  #
+  # Example: 
+  #    device.os.interfaces.each { |inf| puts "  #{inf.getInterfaceMacaddress}" }
+  def method_missing(name, *args, &block)
+    rest("#{name}")
+  end # method_missing(name, args*, &block)
 
   private
 
